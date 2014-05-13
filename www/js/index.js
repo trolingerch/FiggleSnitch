@@ -20,7 +20,7 @@ $('button.camera-control').click(function () {
 });
 
 $('button.save').click(function () {
-    photos.append(makePhoto());
+    photos.push(makePhoto());
     savePhotos();
 });
 
@@ -59,6 +59,11 @@ function reloadPhotos () {
 function savePhotos () {
     if (Modernizr.localstorage) {
         localStorage.clear();
-            localStorage["photos"] = JSON.stringify(photos);
+        localStorage["photos"] = JSON.stringify(photos);
+        if (navigator.notification) {
+        	navigator.notification.alert("Entry has been saved", null, "Success!", 'OK');
+    	} else {
+        	alert("Entry has been saved");
+    	}
     }
 }
