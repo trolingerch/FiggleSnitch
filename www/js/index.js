@@ -42,8 +42,9 @@ function makePhoto () {
 }
 
 function displayPhotos () {
+	$('#photo-list').append('<li>list of photos</li>');
     for (var i=0; i<photos.length; i++) {
-        $('#photo-list').append('<img src="' + photos[i]["photo"] + '" />');
+        $('#photo-list').append('<li><img src="' + photos[i]["photo"] + '" /></li>');
     }
 }
 
