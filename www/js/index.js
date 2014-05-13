@@ -1,4 +1,8 @@
 // This is the main JavaScript source for FiggleSnitch
+var photos = [];
+
+reloadPhotos();
+displayPhotos();
 
 $('button.camera-control').click(function () {
 	// navigator is PhoneGap access to hardware
@@ -15,6 +19,45 @@ $('button.camera-control').click(function () {
 	}
 });
 
+$('button.save').click(function () {
+    photos.append(makePhoto());
+    savePhotos();
+});
+
 function getPhoto (data) {
 	$('#camera-photo').attr('src', "data:image/jpeg;base64," + data);
+}
+
+function makePhoto () {
+    var currentPhoto = $('#camera-photo').attr('src');
+    var currentGisLocation = $('#gis-location').html();
+    var currentDescription = $('#description').val();
+
+    var photo = {
+        "photo" : currentPhoto//,
+        //"gisLocation" : currentGisLocation, 
+        //"description" : currentDescription
+    };
+    return photo;
+}
+
+function displayPhotos () {
+    for (var i=0; i<photos.length; i++) {
+        $('#photo-list').append('<img src="' + photos[i]["photo"] + '" />');
+    }
+}
+
+function reloadPhotos () {
+    if (Modernizr.localstorage) {
+        if (localStorage["photos"] != null) {
+            entries = JSON.parse(localStorage["photos"]);
+        }
+    }
+}
+
+function savePhotos () {
+    if (Modernizr.localstorage) {
+        localStorage.clear();
+            localStorage["photos"] = JSON.stringify(photos);
+    }
 }
