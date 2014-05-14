@@ -1,8 +1,4 @@
 // This is the main JavaScript source for FiggleSnitch
-var photos = [];
-
-reloadPhotos();
-displayPhotos();
 
 $('button.camera-control').click(function () {
 	// navigator is PhoneGap access to hardware
@@ -16,54 +12,18 @@ $('button.camera-control').click(function () {
 		};
 		
 		navigator.camera.getPicture(getPhoto, null, options);
+		navigator.geolocation.getCurrentPosition(getPosition, null, {enableHighAccuracy: true});
 	}
-});
-
-$('button.save').click(function () {
-    photos.push(makePhoto());
-    savePhotos();
 });
 
 function getPhoto (data) {
 	$('#camera-photo').attr('src', "data:image/jpeg;base64," + data);
 }
 
-function makePhoto () {
-    var currentPhoto = $('#camera-photo').attr('src');
-    var currentGisLocation = $('#gis-location').html();
-    var currentDescription = $('#description').val();
-
-    var photo = {
-        "photo" : currentPhoto//,
-        //"gisLocation" : currentGisLocation, 
-        //"description" : currentDescription
-    };
-    return photo;
-}
-
-function displayPhotos () {
-	$('#photo-list').append('<li>list of photos</li>');
-    for (var i=0; i<photos.length; i++) {
-        $('#photo-list').append('<li><img src="' + photos[i]["photo"] + '" /></li>');
-    }
-}
-
-function reloadPhotos () {
-    if (Modernizr.localstorage) {
-        if (localStorage["photos"] != null) {
-            entries = JSON.parse(localStorage["photos"]);
-        }
-    }
-}
-
-function savePhotos () {
-    if (Modernizr.localstorage) {
-        localStorage.clear();
-        localStorage["photos"] = JSON.stringify(photos);
-        if (navigator.notification) {
-        	navigator.notification.alert("Entry has been saved", null, "Success!", 'OK');
-    	} else {
-        	alert("Entry has been saved");
-    	}
-    }
+function getPosition (position) {
+	var longitude = position.coords.longitude;
+	var latitude = position.coords.latitude;
+	
+	$('#longitude').html('Long: ' + longitude);
+	$('#latitude').html('Lat: ' + latitude);
 }
